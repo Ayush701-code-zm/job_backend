@@ -1,5 +1,5 @@
 import userModel from "../models/userModel.js";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs"; // Changed to bcryptjs
 
 export const registerController = async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -24,8 +24,8 @@ export const registerController = async (req, res, next) => {
   //     });
   //   }
 
-  // Hash the password
-  const hashedPassword = await bcrypt.hash(password, 10);
+  // Hash the password using bcryptjs
+  const hashedPassword = await bcryptjs.hash(password, 10);
 
   // Create new user
   const user = new userModel({ name, email, password: hashedPassword });
@@ -50,7 +50,8 @@ export const loginController = async (req, res, next) => {
   if (!user) {
     next("invalid user");
   }
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcryptjs.compare(password, user.password); // Changed to bcryptjs
+
   if (!isMatch) {
     next("invalid password");
   }
